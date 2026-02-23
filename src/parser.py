@@ -4,8 +4,15 @@ from decimal import Decimal, InvalidOperation
 from bs4 import BeautifulSoup
 
 
+class BsError(Exception):
+    pass
+
+
 def get_price_decimal(content: str, selected_fragment: str) -> str:
-    selection = get_selection(content, selected_fragment)
+    try:
+        selection = get_selection(content, selected_fragment)
+    except Exception as e:
+        raise BsError(e)
     return extract_price_decimal(selection)
 
 
