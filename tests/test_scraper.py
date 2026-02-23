@@ -1,6 +1,8 @@
 from unittest.mock import patch
 
-from src.scraper import get_html
+import pytest
+
+from src.scraper import ScraperError, get_html
 
 
 @patch("src.scraper.httpx.get")
@@ -17,11 +19,11 @@ def test_get_html(m_get):
 
 
 @patch("src.scraper.httpx.get")
-def test_return_none_on_error(m_get):
+def test_raise_error_on_failure(m_get):
     m_get.return_value.is_success = False
     url = "example.com"
 
-    result = get_html(url)
+    with pytest.raises(ScraperError):
+        get_html(url)
 
     m_get.assert_called_with(url)
-    assert result is None
